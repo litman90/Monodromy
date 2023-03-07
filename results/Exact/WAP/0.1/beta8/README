@@ -1,0 +1,2 @@
+python -u ../../scripts/exact_code_DKT.py WAP 8 x x x|tee output
+

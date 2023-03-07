@@ -1,0 +1,2 @@
+python -u ../../../scripts/exact_code_DKT.py WQP 1 x x x 0.4 |tee output
+
