@@ -1,17 +1,17 @@
 ###=============================================================###
-###  Exact evaluation of KT and DKT correlations for simple 	###
-###  Hamiltonians using Gauss-Hermite (i.e. HO) basis sets. 	###
+###  Exact evaluation of KT and DKT correlations for simple	###
+###  Hamiltonians using Gauss-Hermite (i.e. HO) basis sets.	###
 ###  The 2D TCF computed are:									###
-###  1a) DKT correlation <A;B(t1);C(t2)> 						###
-###  1b) DKT correlation <dot(A);dot(B)(t1);C(t2)> 						###
-###  2) standard TCF <AB(t1)C(t2)>					 			###
-###  3) standard TCF <B(t1)C(t2)A>					 			###
-###  4) standard TCF <C(t2)AB(t1)>					 			###
-###  5) standard TCF <AC(t2)B(t1)>					 			###
-###  6) standard TCF <C(t2)B(t1)A>					 			###
-###  7) standard TCF <B(t1)AC(t2)>					 			###
+###  1a) DKT correlation <A;B(t1);C(t2)>						###
+###  1b) DKT correlation <dot(A);dot(B)(t1);C(t2)>						###
+###  2) standard TCF <AB(t1)C(t2)>								###
+###  3) standard TCF <B(t1)C(t2)A>								###
+###  4) standard TCF <C(t2)AB(t1)>								###
+###  5) standard TCF <AC(t2)B(t1)>								###
+###  6) standard TCF <C(t2)B(t1)A>								###
+###  7) standard TCF <B(t1)AC(t2)>								###
 ###  The 1D TCF computed are:									###
-###  1) KT correlation <A;B(t1)> 								###
+###  1) KT correlation <A;B(t1)>								###
 ###=============================================================###
 hbar=1.0
 import sys
@@ -29,7 +29,10 @@ t_init=get_time.time()
 
 ### usage
 if(len(sys.argv)<=2):
-	sys.exit('Usage: python {} potential beta A B C (cubic coef)'.format(sys.argv[0]))
+	print('Usage: python {} potential beta A B C (cubic coef)'.format(sys.argv[0]))
+	print('Potential should be "HO" or "WAP" or "QP" or "WQP" or "OHqtip4pf" or "QPper" or "Chaos" ')
+	print('A,B,C should be x or x2')
+	sys.exit() 
 ### potential
 potential=sys.argv[1]
 if(potential!='HO' and potential!='WAP' and potential!='QP' and potential!='WQP' and potential!='OHqtip4pf' and potential!='QPper' and potential!='Chaos'):
@@ -60,22 +63,22 @@ print('C = ',C_obs)
 ###================================================================
 ### define some parameters of the simulation
 
-dt = .5  		# time step (au)
-nstep = 100  	# number of time step
-#nstep = 200  	# number of time step
+dt = .5			# time step (au)
+nstep = 100	# number of time step
+#nstep = 200	# number of time step
 
 
 #Standard yair
-nb = 200  		# number of basis functions to use
-tnb = 16  		# truncated basis set 
+nb = 200		# number of basis functions to use
+tnb = 16		# truncated basis set 
 
 #Tighter 1
-#nb = 400  		# number of basis functions to use
-#tnb = 16  		# truncated basis set 
+#nb = 400		# number of basis functions to use
+#tnb = 16		# truncated basis set 
 
 #Tighter 2
-#nb = 400  		# number of basis functions to use
-#tnb = 32  		# truncated basis set 
+#nb = 400		# number of basis functions to use
+#tnb = 32		# truncated basis set 
 
 print('Simulation parameters')
 print('dt = ',dt)
@@ -323,7 +326,7 @@ KT = np.zeros(nstep,dtype=complex)
 for t1 in range(nstep):
 	print('step ',t1,' of ',nstep,'total')
 
-	for n in range(tnb): 	# trace
+	for n in range(tnb):	# trace
 		for m in range(tnb):
 				fct_beta = np.exp(-beta*vals[n]) 
 				if (n==m):
@@ -333,7 +336,7 @@ for t1 in range(nstep):
 					fct_beta *= (np.exp(beta*freq) - 1.) / freq
 
 				KT[t1] += fct_beta	\
-					  * A[n,m]	   	\
+					  * A[n,m]		\
 					  * B[m,n] * np.exp(1.j*time[t1]*(vals[m]-vals[n])) 
 
 KT /= (beta*Z)
@@ -489,32 +492,32 @@ if compute_std:
 	
 						C_ABC[t1,t2] += fct_beta	\
 						     * A[q,r]			\
-					 	     * B[r,s] * np.exp(1.j*time[t1]*(vals[r] - vals[s]))	\
+						     * B[r,s] * np.exp(1.j*time[t1]*(vals[r] - vals[s]))	\
 						     * C[s,q] * np.exp(1.j*time[t2]*(vals[s] - vals[q]))           
 
 						C_BCA[t1,t2] += fct_beta	\
-					 	     * B[q,r] * np.exp(1.j*time[t1]*(vals[q] - vals[r]))	\
+						     * B[q,r] * np.exp(1.j*time[t1]*(vals[q] - vals[r]))	\
 						     * C[r,s] * np.exp(1.j*time[t2]*(vals[r] - vals[s]))	\
 						     * A[s,q]	
 
 						C_CAB[t1,t2] += fct_beta	\
 						     * C[q,r] * np.exp(1.j*time[t2]*(vals[q] - vals[r]))	\
 						     * A[r,s]	\
-					 	     * B[s,q] * np.exp(1.j*time[t1]*(vals[s] - vals[q]))
+						     * B[s,q] * np.exp(1.j*time[t1]*(vals[s] - vals[q]))
 
 						C_BAC[t1,t2] += fct_beta	\
-					 	     * B[q,r] * np.exp(1.j*time[t1]*(vals[q] - vals[r]))	\
+						     * B[q,r] * np.exp(1.j*time[t1]*(vals[q] - vals[r]))	\
 						     * A[r,s]		\
 						     * C[s,q] * np.exp(1.j*time[t2]*(vals[s] - vals[q]))           
 
 						C_ACB[t1,t2] += fct_beta	\
 						     * A[q,r]		\
 						     * C[r,s] * np.exp(1.j*time[t2]*(vals[r] - vals[s]))    \
-					 	     * B[s,q] * np.exp(1.j*time[t1]*(vals[s] - vals[q]))	
+						     * B[s,q] * np.exp(1.j*time[t1]*(vals[s] - vals[q]))	
 
 						C_CBA[t1,t2] += fct_beta	\
 						     * C[q,r] * np.exp(1.j*time[t2]*(vals[q] - vals[r]))    \
-					 	     * B[r,s] * np.exp(1.j*time[t1]*(vals[r] - vals[s]))	\
+						     * B[r,s] * np.exp(1.j*time[t1]*(vals[r] - vals[s]))	\
 						     * A[s,q]		
 
 
