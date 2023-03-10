@@ -45,6 +45,7 @@ def main(
     dt=0.1,
     beta=1,
     n_order=2,
+    lmax=None
 ):
     """Compute and plot FFT CF-sym and CF-asym
     filename_sym: COMPLETE
@@ -144,6 +145,7 @@ def main(
         axis_x=time_axis_x,
         axis_y=time_axis_y,
         figsize=figsize,
+        lmax=lmax
     )
     title1 = "CF-asym.real"
     title2 = "CF-asym.imag "
@@ -165,6 +167,7 @@ def main(
         axis_x=time_axis_x,
         axis_y=time_axis_y,
         figsize=figsize,
+        lmax=lmax
     )
 
     if False:
@@ -209,6 +212,7 @@ def main(
         ylabel2=freq_ylabel,
         axis_x=freq_axis_x,
         axis_y=freq_axis_y,
+        lmax=lmax
     )
         if False:
             idx = int(ndim / 2)
@@ -220,7 +224,6 @@ def main(
         title2 = "Resp symm"
         temp_data_sym = Resp_sym + Resp_asym
         temp_data_asym = Resp_sym
-
         legend = [title1, title2]
 
         fig6 = plot_2d_2(
@@ -235,7 +238,7 @@ def main(
         ylabel2=freq_ylabel,
         axis_x=freq_axis_x,
         axis_y=freq_axis_y,
-        reference=1
+        lmax=lmax
     )
         if False:
             idx = int(ndim / 2)
@@ -262,6 +265,7 @@ def main(
         ylabel2=freq_ylabel,
         axis_x=freq_axis_x,
         axis_y=freq_axis_y,
+        lmax=lmax
     )
         if False:
             idx = int(ndim / 2)
@@ -322,6 +326,7 @@ def plot_2d(
     axis_y="",
     fisize=[8, 8],
     nlevels=100,
+    lmax=None
 ):
     """Contour plot"""
 
@@ -329,7 +334,8 @@ def plot_2d(
     fig, ax = plt.subplots(figsize=figsize, sharex=True, sharey=True)
 
     ### define levels
-    lmax = np.max(np.abs(z))
+    if lmax is None:
+       lmax = np.max(np.abs(z))
     lmin = -lmax
     ldel = (lmax - lmin) / nlevels
     levels = np.arange(lmin, lmax + ldel, ldel)
@@ -378,19 +384,22 @@ def plot_2d_2(
     axis_y="",
     figsize=[8, 8],
     nlevels=100,
-reference=None):
+    reference=None,
+    lmax=None):
     """Contour plot [x2]"""
 
     ### define figure
     fig, ax = plt.subplots(2, figsize=figsize, sharex=True, sharey=True)
 
     ### define levels
-    if reference is None:
+    if reference is None and lmax is None:
         lmax = max(np.max(np.abs(z1)), np.max(np.abs(z2)))
     elif reference ==1 :
             lmax = np.max(np.abs(z1))
     elif reference ==2 :
             lmax = np.max(np.abs(z2))
+    elif reference is None and lmax is not None:
+         pass
     else:
             raise NotImplementedError
     lmin = -lmax
@@ -555,6 +564,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "-n2", "--ndim_2", type=int, default=300, help="Dimension along time 2"
     )
+    parser.add_argument(
+        "-lmax", "--lmax", type=float, default=None, help="Intensity Maximum"
+    )
     parser.add_argument("-what", "--what_to_plot", type=str, choices=['coscos','sinsin','cossin','sincos'],default='coscos', help="Freq plot to be shown ")
 
     args = parser.parse_args()
@@ -567,4 +579,4 @@ if __name__ == "__main__":
     what_to_plot = args.what_to_plot
     beta = args.beta
 
-    main(filename_sym, filename_asym, tau, ndim1, ndim2, dt, beta,n_order=2)
+    main(filename_sym, filename_asym, tau, ndim1, ndim2, dt, beta,n_order=2,lmax=args.lmax)
