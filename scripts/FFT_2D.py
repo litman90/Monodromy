@@ -45,7 +45,8 @@ def main(
     dt=0.1,
     beta=1,
     n_order=2,
-    lmax=None
+    lmax=None,
+    quantum=False
 ):
     """Compute and plot FFT CF-sym and CF-asym
     filename_sym: COMPLETE
@@ -92,7 +93,8 @@ def main(
             delta = np.power(np.abs(time[i]) / tau, n_order) + np.power(np.abs(time[j]) / tau, n_order   )
             CF_sym[i, j] *= np.exp(-delta)
             CF_asym[i, j] *= np.exp(-delta)
-    CF_sym =  2.0 * CF_sym
+    if quantum:
+        CF_sym =  2.0 * CF_sym
     CF_asym =  CF_asym
     ###================================================================
     ###====================== Computing FFTs =========================#
@@ -567,6 +569,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "-lmax", "--lmax", type=float, default=None, help="Intensity Maximum"
     )
+    parser.add_argument(
+        "-q", "--quantum", action='store_true', help="COMPLETE"
+    )
     parser.add_argument("-what", "--what_to_plot", type=str, choices=['coscos','sinsin','cossin','sincos'],default='coscos', help="Freq plot to be shown ")
 
     args = parser.parse_args()
@@ -579,4 +584,4 @@ if __name__ == "__main__":
     what_to_plot = args.what_to_plot
     beta = args.beta
 
-    main(filename_sym, filename_asym, tau, ndim1, ndim2, dt, beta,n_order=2,lmax=args.lmax)
+    main(filename_sym, filename_asym, tau, ndim1, ndim2, dt, beta,n_order=2,lmax=args.lmax,quantum=args.quantum)
