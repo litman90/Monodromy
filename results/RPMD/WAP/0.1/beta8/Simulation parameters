@@ -1,0 +1,7 @@
+Temperature: 0.125 a.u.
+m: 1.0, 
+therm_time: 50.0, 
+time_total: 30.0, 
+nbeads: 32, 
+dt: 0.01, 
+dt_therm: 0.05
